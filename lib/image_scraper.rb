@@ -9,13 +9,18 @@ module ImageScraper
   # Your code goes here...
   class Scraper
     def initialize
-      @images = []
-      @urls = []
+      @images = Set.new
+      @urls = Set.new
+    end
+
+    def scrape(url, opts= {})
+      do_scrape url, opts
+      download_images
     end
 
     # @param [String] url
     # @option opts [Num] :depth (0)
-    def scrape(url, opts={})
+    def do_scrape(url, opts={})
       # puts url
       depth = (opts.fetch :depth, 0) || 0
       image_urls, page_urls = parse url
@@ -26,7 +31,6 @@ module ImageScraper
         end
         @images << image
         puts image
-        save_image image
       end
       if depth > 0
         depth = depth - 1
@@ -35,7 +39,7 @@ module ImageScraper
             next
           end
           @urls << p_u
-          scrape p_u, :depth => depth
+          do_scrape p_u, :depth => depth
         end
       end
     end
@@ -51,10 +55,17 @@ module ImageScraper
       [images, links]
     end
 
-    def save_image(url)
-      r = Typhoeus.get url
-      name = url.sub(/\//, '-')
-      File.open("images/#{ name }", 'wb') { |fp| fp.write(r.body) }
+    def download_images
+      hydra = Typhoeus::Hydra.new
+      requests = @images.map{|url| Typhoeus::Request.new url }
+      requests.each do |request|
+        name = request.base_url.gsub(/\//, '-')
+        request.on_complete do |res|
+          File.open("images/#{ name }", 'wb') { |fp| fp.write(res.body) }
+        end
+        hydra.queue(request)
+      end
+      hydra.run
     end
 
   end
