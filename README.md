@@ -7,7 +7,7 @@ and scrapes all those pages for images along the way, too.
 
 ## Usage
 
-```ruby
+```bash
 bin/image_scraper scrape http://www.google.com --depth 2
 ```
 
