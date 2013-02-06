@@ -1,24 +1,15 @@
 # ImageScraper
 
-TODO: Write a gem description
+Scrapes a page for images and downloads them into the `images` subdirectory.
+When used with the `--depth x` option also follows links up to `x` times
+and scrapes all those pages for images along the way, too.
 
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'image_scraper'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install image_scraper
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+bin/image_scraper scrape http://www.google.com --depth 2
+```
 
 ## Contributing
 
