@@ -1,4 +1,4 @@
-# ImageScraper
+# ImageScraper [![Dependency Status](https://gemnasium.com/akatov/image_scraper.png)](https://gemnasium.com/akatov/image_scraper)
 
 Scrapes a page for images and downloads them into the `images` subdirectory.
 When used with the `--depth x` option also follows links up to `x` times
